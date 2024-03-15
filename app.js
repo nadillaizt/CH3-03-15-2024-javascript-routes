@@ -14,7 +14,6 @@ app.use(express.json());
 // middleware dari third party
 app.use(morgan('dev'));
 
-
 // middleware kita sendiri
 app.use((req, res, next) => {
   console.log("Hellow FSW 1, ini middleware kita sendiri....");
@@ -26,10 +25,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-// read file jsonnya
-
-
 const defaultRouter = (req, res, next) => {
   res.send("<p>halo my friend</p>");
 };
@@ -37,7 +32,6 @@ const defaultRouter = (req, res, next) => {
 
 // // localhost:8000
 // app.get("/", defaultRouter);
-
 
 app.use("/api/v1/customers", customRouter);
 
