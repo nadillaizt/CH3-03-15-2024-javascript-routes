@@ -35,6 +35,4 @@ const defaultRouter = (req, res, next) => {
 
 app.use("/api/v1/customers", customRouter);
 
-app.listen(PORT, () => {
-  console.log(`APP running on port : ${PORT}`);
-});
+module.exports = app;
