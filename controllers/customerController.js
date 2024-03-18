@@ -1,15 +1,15 @@
-const express = require("express");
 const fs = require("fs");
 
-// read file JSON
+// read file json nya
 const customers = JSON.parse(
-  fs.readFileSync(`${__dirname}/../data/dummy_data.json`)
+  fs.readFileSync(`${__dirname}/../data/dummy.json`)
 );
 
-const getCustomersData = (req, res, next) => {
+const getCustomers = (req, res, next) => {
+  console.log(req.requestTime);
   res.status(200).json({
-    status: "succes",
-    totaldata: customers.length,
+    status: "success",
+    totalData: customers.length,
     requestAt: req.requestTime,
     data: {
       customers,
@@ -17,16 +17,11 @@ const getCustomersData = (req, res, next) => {
   });
 };
 
-// mengambil data
-const getCustomersDataById = (req, res, next) => {
+const getCustomerById = (req, res, next) => {
   const id = req.params.id;
 
   // menggunakan array method utk membantu menemukan spesifik data
   const customer = customers.find((cust) => cust._id === id);
-
-  // shortcut memanggil objek
-  // cont (id, name, date) = req.params;
-  // console.log(id);
 
   res.status(200).json({
     status: "success",
@@ -36,102 +31,101 @@ const getCustomersDataById = (req, res, next) => {
   });
 };
 
-// update data
-const updateCustomers = (req, res) => {
+const updateCustomer = (req, res) => {
+  console.log("MASUK EDIT GAK");
   const id = req.params.id;
 
-  // 1.melakukan pencarian data
+  // 1. melakukan pencarian data yg sesuai parameter id nya
   const customer = customers.find((cust) => cust._id === id);
   const customerIndex = customers.findIndex((cust) => cust._id === id);
 
-  // 2. ada gak datanya
+  console.log(customer);
+  console.log(customerIndex);
+  console.log(!customer);
+
+  // 2. ada gak data customer nya
   if (!customer) {
-    return res.status(404).JSON({
+    return res.status(404).json({
       status: "fail",
-      message: `custommer dengan ID : ${id} gak ada`,
+      message: `customer dengan ID : ${id} gak ada`,
     });
   }
 
-  // 3. kalau ada, berarti update datanya sesuai reques body dari user
-  // object assign = menggabungkan object or spread operator
-
+  // 3. kalau ada, berarti update data nya sesuai request body dari client/user
+  // object assign = menggabungkan objek OR spread operator
   customers[customerIndex] = { ...customers[customerIndex], ...req.body };
 
-  // 4. melakukan update di dokumennya
+  console.log(customers[customerIndex]);
+
+  // 4. melakukan update di dokumen json nya
   fs.writeFile(
-    `${__dirname}/data/dummy_data.json`,
+    `${__dirname}/data/dummy.json`,
     JSON.stringify(customers),
     (err) => {
       res.status(200).json({
-        status: "succes",
-        message: "berhasil",
-        data: {
-          customer: customer[customerIndex],
-          customer,
-        },
+        status: "success",
+        message: "berhasil update data",
       });
     }
   );
 };
 
-// menghapus data
-const deletedata = (req, res) => {
+const deleteCustomer = (req, res) => {
   const id = req.params.id;
-  // 1.melakukan pencarian data
+
+  // 1. melakukan pencarian data yg sesuai parameter id nya
   const customer = customers.find((cust) => cust._id === id);
   const customerIndex = customers.findIndex((cust) => cust._id === id);
 
-  // 2. ada gak datanya
+  // 2. ada gak data customer nya
   if (!customer) {
-    return res.status(404).JSON({
+    return res.status(404).json({
       status: "fail",
-      message: `Id : ${id} tidak ditemukan`,
+      message: `customer dengan ID : ${id} gak ada`,
     });
   }
 
-  // 3. kalau ada, berarti delete datanya sesuai reques body dari user
-  // object assign = menggabungkan object or spread operator
-
-  // customers[customerIndex] = {...customers[customerIndex], ...req.body}
+  // 3. kalau ada, berarti delete data nya
   customers.splice(customerIndex, 1);
 
-  // 4. melakukan update di dokumennya
+  // 4. melakukan update di dokumen json nya
   fs.writeFile(
-    `${__dirname}/data/dummy_data.json`,
+    `${__dirname}/data/dummy.json`,
     JSON.stringify(customers),
     (err) => {
       res.status(200).json({
-        status: "succes",
-        message: "data delete",
+        status: "success",
+        message: "berhasil delete data",
       });
     }
   );
 };
 
-// menambahkan data
-const createCustomers = (req, res) => {
+const createCustomer = (req, res) => {
+  console.log(req.body);
+
   const newCustomer = req.body;
-  customers.push(req.body);
+
+  customers.push(newCustomer);
+
   fs.writeFile(
-    `${__dirname}/data/dummy_data.json`,
+    `${__dirname}/data/dummy.json`,
     JSON.stringify(customers),
     (err) => {
       res.status(201).json({
         status: "success",
         data: {
-          customers: newCustomer,
+          customer: newCustomer,
         },
       });
     }
   );
-
-  res.send("oke udah");
 };
 
 module.exports = {
-  getCustomersData,
-  getCustomersData,
-  getCustomersDataById,
-  createCustomers,
-  deletedata,
+  getCustomers,
+  getCustomerById,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
 };

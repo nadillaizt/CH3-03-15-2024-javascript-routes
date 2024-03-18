@@ -1,13 +1,13 @@
 {
-  "name": "13-03-2024",
+  "name": "03-13-2024-nodejs-express-json",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev" : "nodemon server.js"
+    "dev": "nodemon server.js"
   },
-  "author": "A Ias Falah Surya Gemilang",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.3",
